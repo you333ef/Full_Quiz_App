@@ -16,15 +16,17 @@ function clsx(...inputs: ClassValue[]): string {
     if (tmp) {
       if (typeof tmp === 'string' || typeof tmp === 'number') {
         str += ' ' + tmp;
-      } else if (Array.isArray(tmp)) {
-        x = clsx(...tmp);
-        if (x) {
-          str += ' ' + x;
-        }
-      } else {
-        for (x in tmp) {
-          if (tmp[x]) {
+      } else if (typeof tmp === 'object' && tmp !== null) {
+        if (Array.isArray(tmp)) {
+          x = clsx(...tmp);
+          if (x) {
             str += ' ' + x;
+          }
+        } else {
+          for (const key in tmp as ClassDictionary) {
+            if (tmp[key]) {
+              str += ' ' + key;
+            }
           }
         }
       }
