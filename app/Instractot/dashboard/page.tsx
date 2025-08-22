@@ -1,9 +1,37 @@
 'use client'
 import React, { Suspense, lazy, useEffect, useMemo, useState, useDeferredValue } from "react";
 import axios from "axios";
-import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { cva, type VariantProps } from "class-variance-authority";
+
+// Inline clsx function and types to avoid dependency issue
+type ClassValue = ClassArray | ClassDictionary | string | number | null | boolean | undefined;
+type ClassArray = ClassValue[];
+type ClassDictionary = Record<string, any>;
+
+function clsx(...inputs: ClassValue[]): string {
+  let i = 0, tmp: ClassValue, x: string, str = '', len = inputs.length;
+  for (; i < len; i++) {
+    tmp = inputs[i];
+    if (tmp) {
+      if (typeof tmp === 'string' || typeof tmp === 'number') {
+        str += ' ' + tmp;
+      } else if (Array.isArray(tmp)) {
+        x = clsx(...tmp);
+        if (x) {
+          str += ' ' + x;
+        }
+      } else {
+        for (x in tmp) {
+          if (tmp[x]) {
+            str += ' ' + x;
+          }
+        }
+      }
+    }
+  }
+  return str.slice(1);
+}
 
 // Utils
 function cn(...inputs: ClassValue[]) {
