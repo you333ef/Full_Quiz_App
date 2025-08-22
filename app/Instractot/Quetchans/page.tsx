@@ -221,12 +221,12 @@ const VIET_Intro=(data:any)=>{
    setSv_View(data)
     VIEW_SECOND_STEP()
   }
-  let [Quetchan,setQuetchan]=useState([])
+  const [Quetchan,setQuetchan]=useState<Question | null>(null)
   const VIEW_SECOND_STEP=async()=>{
      const tokenn = localStorage.getItem('token');
     try {
       if(Sv_View && Sv_View._id){
-  const response= await axios.get(`https://upskilling-egypt.com:3005/api/question/${Sv_View?._id}`, 
+  const response= await axios.get(`https://upskilling-egypt.com:3005/api/question/${Sv_View._id}`, 
     {
     headers: {
       Authorization: `Bearer ${tokenn}`,
@@ -234,7 +234,7 @@ const VIET_Intro=(data:any)=>{
     
   }
 )
-  setQuetchan(response)
+  setQuetchan(response.data)
    setOpen(true);
       }
     
