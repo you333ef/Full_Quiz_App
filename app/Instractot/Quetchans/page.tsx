@@ -205,8 +205,18 @@ const [Edit, setEdit] = useState<Quetchsn|null>(null)
   const handleCancel = () => {
     setIsConfirmationOpen(false);
   };
+  
   // View Things
-  const[Sv_View,setSv_View]=useState('')
+  interface Question {
+  _id: string;
+  title?: string;
+  difficulty?: string;
+  type?: string; 
+  description?: string; 
+}
+
+const [Sv_View, setSv_View] = useState<Question | null>(null);
+
 const VIET_Intro=(data:any)=>{
    setSv_View(data)
     VIEW_SECOND_STEP()
@@ -215,7 +225,7 @@ const VIET_Intro=(data:any)=>{
   const VIEW_SECOND_STEP=async()=>{
      const tokenn = localStorage.getItem('token');
     try {
-      if(Sv_View && Sv_View?._id){
+      if(Sv_View && Sv_View._id){
   const response= await axios.get(`https://upskilling-egypt.com:3005/api/question/${Sv_View?._id}`, 
     {
     headers: {
