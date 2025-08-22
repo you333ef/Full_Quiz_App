@@ -123,9 +123,13 @@ const Groups = () => {
 
 
     const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-let [Edit, setEdit] = useState(null);
+    interface Quetchsn{
+      _id:string;
+
+    }
+const [Edit, setEdit] = useState<Quetchsn|null>(null)
  const handleConfirm = async (data: any) => {
-  if (Edit && Edit?._id) {
+  if (Edit && Edit._id) {
     try {
       const tokenn = localStorage.getItem('token');
       let response = await axios.put(
