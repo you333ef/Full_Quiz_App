@@ -5,16 +5,16 @@ import { useForm } from "react-hook-form";
 import {
   FaEnvelope,
   FaLock,
-  FaUser,
   FaCheckCircle,
   FaIdCard,
 } from "react-icons/fa";
 import InputShared from '../../Shared_component/InputSHared';
-import AuthTabs from "../../AuthTabs/AuthTabs";
 import Link from "next/link";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import AuthTabs from "@/app/AuthTabs/AuthTabs";
+
 
 type SignUpFormInputs = {
   firstName: string;
@@ -47,10 +47,8 @@ export default function SignUpPage() {
       });
 
       if (response.ok) {
-        const result = await response.json();
         toast.success('Registration successful');
         reset();
-        // Use next/navigation router push
         router.push('/AuthLayout/login');
       } else {
         const errorData = await response.json().catch(() => ({}));
@@ -67,17 +65,38 @@ export default function SignUpPage() {
 
   return (
     <>
-      {/* Toast container */}
       <ToastContainer />
 
-      <h2 className="text-xl font-semibold text-lime-300">
+      <h2 className="text-xl font-semibold text-lime-300 text-center lg:text-left">
         Create your account and start using{" "}
         <span className="text-white">QuizWiz!</span>
       </h2>
 
-      <AuthTabs active="signup" />
+      {/* --- Large screens: use AuthTabs --- */}
+      <div className="hidden lg:block mt-4">
+        <AuthTabs active="signup" />
+      </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
+      {/* --- Mobile / small & medium: stacked full-width tabs --- */}
+      <div className="lg:hidden mt-4 w-full">
+        <div className="flex flex-col gap-3 w-full">
+          <Link
+            href="/AuthLayout/login"
+            className="w-full text-center py-2 rounded-md font-semibold transition-all bg-transparent text-white border border-white/20"
+          >
+            Sign In
+          </Link>
+          <Link
+            href="/AuthLayout/signup"
+            className="w-full text-center py-2 rounded-md font-semibold transition-all !bg-lime-300 text-white border border-white/20"
+          >
+            Sign Up
+          </Link>
+        </div>
+      </div>
+
+      {/* --- Form --- */}
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4 signup-form">
         {/* First & Last Name */}
         <div className="flex flex-col lg:flex-row gap-4">
           <InputShared
@@ -154,16 +173,16 @@ export default function SignUpPage() {
         />
 
         {/* Submit */}
-        <div className="flex items-center justify-between mt-4">
+        <div className="flex flex-col items-center gap-3 lg:flex-row lg:justify-between lg:items-center mt-4">
           <button
             type="submit"
-            className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-md font-semibold cursor-pointer"
+            className="w-full lg:w-auto flex items-center justify-center gap-2 bg-white text-black px-4 py-2 rounded-md font-semibold cursor-pointer"
             disabled={loading}
           >
             {loading ? "Loading..." : "Sign Up"} <FaCheckCircle />
           </button>
 
-          <p className="text-sm">
+          <p className="text-sm text-center lg:text-right">
             Already have an account?{" "}
             <Link
               href="/AuthLayout/login"
@@ -174,6 +193,16 @@ export default function SignUpPage() {
           </p>
         </div>
       </form>
+
+      {/* Scoped styles */}
+      <style jsx>{`
+        .signup-form input,
+        .signup-form textarea,
+        .signup-form select {
+          width: 100% !important;
+          box-sizing: border-box;
+        }
+      `}</style>
     </>
   );
 }

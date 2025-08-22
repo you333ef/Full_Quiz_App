@@ -21,12 +21,12 @@ interface menuItems{
  
 }
 const menuItems = [
-  { name: 'Dashboard', icon: <FaHome /> ,path:'/Instractot/dashboard'},
-  { name: 'Students', icon: <FaUsers />, path:'/Instractot/students' },
-  { name: 'Groups', icon: <MdGroups />, path:'/Instractot/groups'},
-  { name: 'Quizzes', icon: <FaChalkboardTeacher />, path:'/Instractot/quizzes' },
-  { name: 'Results', icon: <FaChartBar />, path:'/Instractot/results' },
-  { name: 'Quetchans', icon: <AddressBook/> , path:'/Instractot/Quetchans'},
+  { name: 'Dashboard', icon: <FaHome /> ,path:'/learner/quizzes'},
+ 
+ 
+  { name: 'Quizzes', icon: <FaChalkboardTeacher />, path:'/learner/quizzes' },
+  { name: 'Results', icon: <FaChartBar />, path:'/learner/results' },
+  
 ]
 export default function RootLayout({
   children,
@@ -46,9 +46,9 @@ export default function RootLayout({
        
      
           <Sidebar setMenu={setMenu} open={open} setOpen={setOpen} menuItems={menu} />
-          <main className="p-4 w-full"><Protected_roote ROLE='Instructor' >{children}</Protected_roote></main>
+           <main className="p-4 w-full"><Protected_roote ROLE='Student' >{children}</Protected_roote></main>
         
-         
+          
         </div>
 
 

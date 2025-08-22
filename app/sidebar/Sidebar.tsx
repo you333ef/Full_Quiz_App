@@ -20,15 +20,12 @@ export default function Sidebar({ setMenu,open, setOpen,menuItems }: SidebarProp
  const router = useRouter()
   return (
     <>
-      {/* Overlay for small screens */}
       <div
         onClick={() => setOpen(false)}
         className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 md:hidden ${
           open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       ></div>
-
-      {/* Sidebar */}
       <aside
         className={`
           fixed inset-y-0 left-0 z-50 w-64 bg-white border-r shadow transform transition-transform duration-300
@@ -41,7 +38,6 @@ export default function Sidebar({ setMenu,open, setOpen,menuItems }: SidebarProp
     </>
   )
 }
-
 function SidebarContent({router,setMenu,menuItems}:SidebarContentProps) {
  
   const taps =(item:MenuItem)=>{
@@ -49,8 +45,6 @@ function SidebarContent({router,setMenu,menuItems}:SidebarContentProps) {
       return {name : ele.name ,icon:ele.icon,active: item.name=== ele.name,path:ele.path}
     })
     setMenu(newMenu);
-    
-    
   }
   return (
     <div className="w-64 bg-white h-screen px-0 pt-4 ">
@@ -62,7 +56,7 @@ function SidebarContent({router,setMenu,menuItems}:SidebarContentProps) {
             ${item.active ? 'bg-[#0A0F2F] text-white' : 'hover:bg-gray-100'}
           `}
         >
-          <div className={`bg-[#FCEFE5] p-2 rounded-lg text-lg ${item.active ?'text-black' :''}`}>
+          <div className={`bg-[#0d0b09] text-white p-2 rounded-lg text-lg ${item.active ?'text-white' :''}`}>
             {item.icon}
           </div>
           <span className="font-semibold">{item.name}</span>

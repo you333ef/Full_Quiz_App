@@ -33,7 +33,7 @@ const Page = () => {
   let T_Head = [
     "title",
     "code",
-    "status",
+    "score",
    
     "duration",
    
@@ -46,7 +46,7 @@ const Page = () => {
     return {
       title: item.quiz.title,
       code: item.quiz.code,
-      status: item.quiz.status,
+      score: item.result?.score ?? 0,
     
       duration: item.quiz.duration,
      
@@ -62,7 +62,7 @@ const Page = () => {
   return (
     <div className="p-6" style={{overflow:'hidden',margin:'auto',justifyContent:'center',alignItems:'center'}}>
   <div className="flex justify-center items-center gap-2 p-5">
-  <h4 className="text-lg font-semibold">Quizes results</h4>
+  <h1 className="text-lg font-semibold" >Quizes results</h1>
   <FaChartBar className="text-xl" />
 </div>
 

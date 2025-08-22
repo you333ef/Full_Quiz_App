@@ -21,9 +21,7 @@ export default function Navbar({ open,setOpen ,menuItems}:{menuItems:any,open:bo
           </button>
 
         :null}  
-        <span className="text-sm md:text-base font-medium">
-          {menuItems.map(item=>item.active && <span key={item.name}>{item.name}</span>)}
-          </span>
+      
       </div>
 
       {/* Center button */}

@@ -47,10 +47,10 @@ const ChangePasswordPage = () => {
 
   return (
     <div className="w-full text-white">
-      <h2 className="text-xl font-semibold text-lime-300 mb-2">
+      <h2 className="text-xl font-semibold text-lime-300 mb-2 text-center lg:text-left">
         Update your password
       </h2>
-      <p className="text-sm text-gray-300 mb-4">
+      <p className="text-sm text-gray-300 mb-4 text-center lg:text-left">
         For your security, please provide your current and new password.
       </p>
 
@@ -88,14 +88,28 @@ const ChangePasswordPage = () => {
         )}
 
         {/* Submit Button */}
-        <div className="flex justify-end pt-2">
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-white text-black px-4 py-2 rounded-md font-semibold hover:bg-gray-100 cursor-pointer"
-          >
-            {loading ? 'Sending...' : 'Send'}
-          </button>
+        <div className="pt-2">
+          {/* Large screens: button aligned right */}
+          <div className="hidden lg:flex justify-end">
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-white text-black px-4 py-2 rounded-md font-semibold hover:bg-gray-100 cursor-pointer"
+            >
+              {loading ? 'Sending...' : 'Send'}
+            </button>
+          </div>
+
+          {/* Small/Medium screens: button full-width & centered */}
+          <div className="lg:hidden flex justify-center">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-white text-black px-4 py-2 rounded-md font-semibold hover:bg-gray-100 cursor-pointer"
+            >
+              {loading ? 'Sending...' : 'Send'}
+            </button>
+          </div>
         </div>
       </form>
     </div>
