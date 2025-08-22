@@ -20,7 +20,11 @@ export default function LoginPage() {
   const pathname = usePathname();
   const { register, handleSubmit, reset } = useForm<LoginFormInputs>();
   const [loading, setLoading] = useState(false);
-  const { setData_User, data_User } = useContext(AuthContext);
+
+  // handle null-safety for AuthContext
+  const auth = useContext(AuthContext);
+  const data_User = auth?.data_User;
+  const setData_User = auth?.setData_User;
 
   const onSubmit = async (data: LoginFormInputs) => {
     setLoading(true);
@@ -36,8 +40,10 @@ export default function LoginPage() {
       if (response.ok) {
         const result = await response.json();
         localStorage.setItem('token', result.data.accessToken);
-        localStorage.setItem('role',result.data.profile.role)
-        setData_User(result.data.profile);
+        localStorage.setItem('role', result.data.profile.role);
+
+        // safe call
+        setData_User && setData_User(result.data.profile);
 
         toast.success('Login successful');
         reset();
@@ -59,41 +65,30 @@ export default function LoginPage() {
     }
   };
 
-  // determine active tab for mobile
- 
   return (
     <div className="w-full text-white">
-      {/* header: allow wrapping and center on small screens */}
+      {/* header */}
       <h2 className="text-xl font-semibold text-lime-300 whitespace-normal text-center lg:text-left">
         Continue your learning journey with <span className="text-white">QuizWiz!</span>
       </h2>
 
-      {/* --- Desktop / large: keep original AuthTabs visible on lg and up --- */}
+      {/* Desktop tabs */}
       <div className="hidden lg:block mt-4">
-        <AuthTabs active="signin"/>
+        <AuthTabs active="signin" />
       </div>
 
-      {/* --- Mobile / small & medium: stacked full-width tabs --- */}
+      {/* Mobile tabs */}
       <div className="lg:hidden mt-4 w-full">
         <div className="flex flex-col gap-3 w-full">
-          {/* Sign In - active shows text-lime-300 on white background; inactive shows white text on transparent bg */}
           <Link
             href="/AuthLayout/register"
-           className="w-full text-center py-2 rounded-md font-semibold transition-all !bg-lime-300 text-white border border-white/20"
-
-           
+            className="w-full text-center py-2 rounded-md font-semibold transition-all !bg-lime-300 text-white border border-white/20"
           >
             Sign In
           </Link>
-
-          {/* Sign Up - mirror logic */}
           <Link
             href="/AuthLayout/signup"
-            className={`w-full text-center py-2 rounded-md font-semibold transition-all bg-transparent text-white border border-white/20
-              
-              
-            `}
-          
+            className="w-full text-center py-2 rounded-md font-semibold transition-all bg-transparent text-white border border-white/20"
           >
             Sign Up
           </Link>
@@ -137,10 +132,7 @@ export default function LoginPage() {
           />
         </div>
 
-        {/* Submit + Forgot area
-            - mobile (default): stacked, submit full-width and centered, forgot under submit
-            - lg and up: restore side-by-side style (submit left, forgot right)
-        */}
+        {/* Submit + Forgot */}
         <div className="mt-6 flex flex-col items-center gap-3 lg:flex-row lg:justify-between lg:items-center">
           <button
             type="submit"
@@ -162,28 +154,19 @@ export default function LoginPage() {
         </div>
       </form>
 
-      {/* Scoped styles to force inputs and icons to take full width on small/medium,
-          and to keep everything self-contained in this file (no global vars). */}
       <style jsx>{`
-        /* ensure any native inputs inside InputShared expand to container width */
         .login-form input,
         .login-form textarea,
         .login-form select {
           width: 100% !important;
           box-sizing: border-box;
         }
-
-        /* ensure icon + input wrappers (if inline) wrap nicely on small screens */
         .login-form .icon-input-wrapper {
           width: 100%;
         }
-
-        /* keep submit button centered visually */
         .submit-btn {
           display: inline-flex;
         }
-
-        /* slight focus/active micro-interaction for mobile tabs */
         .lg\\:hidden a:active {
           transform: translateY(1px);
         }
