@@ -71,8 +71,6 @@ const CardContentInner = ({ className, ...props }: React.HTMLAttributes<HTMLDivE
   <div className={cn("p-[0_20px_20px_20px]", className)} {...props} />
 );
 const CardContent = React.memo(CardContentInner) as typeof CardContentInner;
-
-// Badge Component
 const badgeVariants = cva(
   "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
   {
@@ -163,7 +161,6 @@ const Charts = lazy(() =>
                 </div>
               </CardContent>
             </Card>
-
             <Card className="bg-[#ffffff] border-[#f1f5f9] overflow-hidden min-w-0">
               <CardHeader className="m-auto">
                 <CardTitle className="text-[18px] font-semibold flex items-center gap-3 text-[#1e293b]">
@@ -197,7 +194,6 @@ const Charts = lazy(() =>
     };
   })
 );
-
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
@@ -208,7 +204,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   }
   return null;
 };
-
 const CustomPieTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
