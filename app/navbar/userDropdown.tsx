@@ -68,7 +68,11 @@ const UserDropdown = () => {
   const [showModal, setShowModal] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { data_User } = useContext(AuthContext);
+
+  // ✅ بدل ما نعمل destructuring مباشر:
+  const authContext = useContext(AuthContext);
+  const data_User = authContext?.data_User;
+
   const router = useRouter();
 
   // Sync profile with localStorage only when data_User changes
@@ -101,23 +105,32 @@ const UserDropdown = () => {
     }
   }, []);
 
+  // Add listener ONLY when dropdown is open, and use same options on add/remove
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside, { passive: true });
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [handleClickOutside]);
+    const listenerOptions = { passive: true } as AddEventListenerOptions;
+    if (!open) return;
+    document.addEventListener('mousedown', handleClickOutside, listenerOptions);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside, listenerOptions);
+    };
+  }, [handleClickOutside, open]);
 
   // Memoized navigation functions
   const handleLogout = useCallback(() => {
     try {
-      localStorage.removeItem('token');
-      localStorage.removeItem('DataQuiz');
-      router.push('/AuthLayout/login');
+      setOpen(false);
+      setShowModal(false);
+      localStorage.clear();
+      setTimeout(() => {
+        router.push('/AuthLayout/login');
+      }, 50);
     } catch (error) {
       console.error('Error during logout:', error);
     }
   }, [router]);
 
   const handleChangePassword = useCallback(() => {
+    setOpen(false);
     router.push('/AuthLayout/changePass');
   }, [router]);
 
@@ -141,7 +154,7 @@ const UserDropdown = () => {
 
       {open && (
         <DropdownMenu
-          onProfileClick={() => setShowModal(true)}
+          onProfileClick={() => { setShowModal(true); setOpen(false); }}
           onChangePassword={handleChangePassword}
           onLogout={handleLogout}
         />

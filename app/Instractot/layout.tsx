@@ -14,7 +14,7 @@ import Sidebar from '../sidebar/Sidebar'
 import Navbar from '../navbar/navbar'
 import Protected_roote from '../Protected_roote'
 
-interface MenuItem {
+export interface MenuItem {
   name: string
   icon: ReactNode
   active?: boolean
@@ -40,9 +40,16 @@ export default function InstractotLayout({
     <div className="min-h-screen flex flex-col">
       <Navbar open={open} setOpen={setOpen} menuItems={menu} />
       <div className="flex flex-1 gap-2">
-        <Sidebar setMenu={setMenu} open={open} setOpen={setOpen} menuItems={menu} />
+        <Sidebar 
+          setMenu={setMenu} 
+          open={open} 
+          setOpen={setOpen} 
+          menuItems={menu} 
+        />
         <main className="p-4 w-full">
-          <Protected_roote ROLE="Instructor">{children}</Protected_roote>
+          <Protected_roote ROLE="Instructor">
+            {children}
+          </Protected_roote>
         </main>
       </div>
     </div>

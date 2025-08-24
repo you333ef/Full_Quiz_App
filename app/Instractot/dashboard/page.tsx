@@ -1,10 +1,10 @@
 'use client'
-import React, { Suspense, lazy, useEffect, useMemo, useState, useDeferredValue } from "react";
-import axios from "axios";
+import React, { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { cva, type VariantProps } from "class-variance-authority";
+import axios from "axios";
 
-// Inline clsx function and types to avoid dependency issue
+// Inline clsx function
 type ClassValue = ClassArray | ClassDictionary | string | number | null | boolean | undefined;
 type ClassArray = ClassValue[];
 type ClassDictionary = Record<string, any>;
@@ -35,7 +35,6 @@ function clsx(...inputs: ClassValue[]): string {
   return str.slice(1);
 }
 
-// Utils
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -114,9 +113,6 @@ const Charts = lazy(() =>
 
     return {
       default: function RechartsChunk({ difficultyData, Five }: any) {
-        const deferredDifficultyData = useDeferredValue(difficultyData);
-        const deferredFive = useDeferredValue(Five);
-
         return (
           <>
             <Card className="bg-[#ffffff] border-[#f1f5f9] overflow-hidden">
@@ -131,7 +127,7 @@ const Charts = lazy(() =>
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
-                        data={deferredDifficultyData}
+                        data={difficultyData}
                         cx="50%"
                         cy="50%"
                         innerRadius={50}
@@ -139,7 +135,7 @@ const Charts = lazy(() =>
                         paddingAngle={2}
                         dataKey="value"
                       >
-                        {deferredDifficultyData.map((entry: any, index: number) => (
+                        {difficultyData.map((entry: any, index: number) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
@@ -148,7 +144,7 @@ const Charts = lazy(() =>
                   </ResponsiveContainer>
                 </div>
                 <div className="flex justify-center gap-6 mt-4">
-                  {deferredDifficultyData.map((item: any, index: number) => (
+                  {difficultyData.map((item: any, index: number) => (
                     <div key={index} className="flex items-center gap-2">
                       <div className="w-[10px] h-[10px] rounded-full" style={{ backgroundColor: item.color }} />
                       <span className="text-[13px] text-[#64748b] font-medium">{item.name}</span>
@@ -169,7 +165,7 @@ const Charts = lazy(() =>
                 <div className="w-full h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
-                      data={deferredFive.map((s: any) => ({
+                      data={Five.map((s: any) => ({
                         name: `${s.first_name ?? ""}`.trim(),
                         score: Number(s.avg_score ?? 0),
                       }))}
@@ -214,14 +210,6 @@ const CustomPieTooltip = ({ active, payload }: any) => {
   return null;
 };
 
-function scheduleFetch(fn: () => void) {
-  if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-    (window as any).requestIdleCallback(() => fn(), { timeout: 500 });
-  } else {
-    setTimeout(fn, 100);
-  }
-}
-
 const Dashboard = () => {
   const [data, setData] = useState({
     five: [],
@@ -229,9 +217,11 @@ const Dashboard = () => {
     medium: [],
     hard: [],
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchAllData = async () => {
     try {
+      setIsLoading(true);
       const token = localStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
       const [fiveRes, easyRes, mediumRes, hardRes] = await Promise.all([
@@ -248,17 +238,13 @@ const Dashboard = () => {
       });
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    scheduleFetch(fetchAllData);
-  }, []);
-
-  useEffect(() => {
-    document.title = "Dashboard - Educational Insights";
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", "Top 5 Students and Question Difficulties charts.");
+    fetchAllData();
   }, []);
 
   const difficultyData = useMemo(
@@ -322,9 +308,9 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-[#1e293b]">45</div>
+                <div className="text-3xl font-bold text-[#1e293b]">{isLoading ? "..." : "45"}</div>
                 <Badge variant="secondary" className="text-[12px] font-medium">
-                  +12%
+                  {isLoading ? "..." : "+12%"}
                 </Badge>
               </div>
             </CardContent>
@@ -338,9 +324,9 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-[#1e293b]">95%</div>
+                <div className="text-3xl font-bold text-[#1e293b]">{isLoading ? "..." : "95%"}</div>
                 <Badge variant="default" className="text-[12px] font-medium">
-                  Omar
+                  {isLoading ? "..." : "Omar"}
                 </Badge>
               </div>
             </CardContent>
@@ -354,9 +340,9 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-[#1e293b]">83.8%</div>
+                <div className="text-3xl font-bold text-[#1e293b]">{isLoading ? "..." : "83.8%"}</div>
                 <Badge variant="secondary" className="text-[12px] font-medium">
-                  +5.2%
+                  {isLoading ? "..." : "+5.2%"}
                 </Badge>
               </div>
             </CardContent>
@@ -364,9 +350,11 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-[repeat(auto-fit,minmax(360px,1fr))] gap-8 w-full max-w-full overflow-hidden content-visibility-auto contain-intrinsic-size-[800px]">
-          <Suspense fallback={chartsPlaceholder}>
-            <Charts difficultyData={difficultyData} Five={data.five} />
-          </Suspense>
+          {isLoading ? chartsPlaceholder : (
+            <Suspense fallback={chartsPlaceholder}>
+              <Charts difficultyData={difficultyData} Five={data.five} />
+            </Suspense>
+          )}
         </div>
       </div>
     </main>

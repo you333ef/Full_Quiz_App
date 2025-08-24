@@ -5,7 +5,7 @@ import { Database, CalendarDays, Users, ChevronRight } from "lucide-react";
 import { BsFillAlarmFill } from 'react-icons/bs';
 import Quiz_ConFirm from "@/app/Shared_component/Quiz_ConFirm";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import ViewConfirm_Quiz from "@/app/Shared_component/View_Quiz";
 import HeadlessDemo from "@/app/Shared_component/Confirmation";
 
@@ -225,38 +225,46 @@ const Page = () => {
   }, [tokenn, Get_Completed]);
 
   // Add quiz
-  const handleConfirm = useCallback(async (data: any) => {
-    if (!tokenn) {
-      toast.error('Not authenticated', { style: { background: '#000', color: '#fff' } });
+const handleConfirm = useCallback(async (data: any) => {
+  if (!tokenn) {
+    toast.error('Not authenticated', { style: { background: '#000', color: '#fff' } });
+    return;
+  }
+  try {
+    const response = await axios.post('https://upskilling-egypt.com:3005/api/quiz', data, {
+      headers: { Authorization: `Bearer ${tokenn}` },
+    });
+    console.log('API Response for Create Quiz:', response.data); // Log the response
+    setCreate(response.data);
+    toast.success(response?.data?.message ?? 'Success Creating Quiz', {
+      style: { background: '#000', color: '#fff' },
+    });
+
+    // Validate schedule and update state
+    const quizSchedule = new Date(data.schadule);
+    const now = new Date();
+    if (isNaN(quizSchedule.getTime())) {
+      console.error('Invalid schedule date:', data.schadule);
+      toast.error('Invalid quiz schedule date', { style: { background: '#000', color: '#fff' } });
       return;
     }
-    try {
-      const response = await axios.post('https://upskilling-egypt.com:3005/api/quiz', data, {
-        headers: { Authorization: `Bearer ${tokenn}` },
-      });
-      setCreate(response.data);
-      toast.success(response?.data?.message ?? 'Success Creating Quiz', {
-        style: { background: '#000', color: '#fff' },
-      });
 
-      // Check if the quiz is already completed based on schedule
-      const quizSchedule = new Date(data.schadule);
-      const now = new Date();
-      if (quizSchedule < now) {
-        setcompletedQuizzes((prev) => [...prev, { ...response.data, status: 'Closed', date: formatDate(data.schadule) }]);
-      } else {
-        setSave_All((prev) => [...prev, response.data]);
-      }
-
-      await Promise.allSettled([Fun_Get_All(), Get_Completed()]);
-      setIsConfirmationOpen(false);
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message ?? 'Failed To Create Quiz', {
-        style: { background: '#000', color: '#fff' },
-      });
+    if (quizSchedule < now) {
+      setcompletedQuizzes((prev) => [...prev, { ...response.data, status: 'Closed', date: formatDate(data.schadule) }]);
+    } else {
+      setSave_All((prev) => [...prev, { ...response.data, schadule: data.schadule }]); // Ensure schedule is included
     }
-  }, [tokenn, Fun_Get_All, Get_Completed, formatDate]);
 
+    // Force refresh data from API
+    await Promise.allSettled([Fun_Get_All(), Get_Completed()]);
+    setIsConfirmationOpen(false);
+  } catch (error: any) {
+    console.error('Create Quiz Error:', error.response?.data || error.message);
+    toast.error(error?.response?.data?.message ?? 'Failed To Create Quiz', {
+      style: { background: '#000', color: '#fff' },
+    });
+  }
+}, [tokenn, Fun_Get_All, Get_Completed, formatDate]);
   // View quiz
   const Get_id_To_View = useCallback(async (id: any) => {
     if (!tokenn || tokenn === 'null' || tokenn === 'undefined') {
@@ -375,6 +383,7 @@ const Page = () => {
   ), [formatDate, formatTime, getStatusStyle, HandleView]);
   return (
     <>
+    <ToastContainer/>
       <ViewConfirm_Quiz
         isOpen={isOpen}
         onClose={handleCloseView}
