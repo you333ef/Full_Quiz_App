@@ -138,9 +138,14 @@ const Charts = lazy(() =>
               outerRadius={110}
               paddingAngle={2}
               dataKey="value"
+              style={{ color: 'inherit' }} // Ensure color inheritance
             >
               {difficultyData.map((entry: any, index: number) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.color}
+                  style={{ fill: entry.color, color: entry.color }} // Force color application
+                />
               ))}
             </Pie>
             <TooltipComp content={<CustomPieTooltip />} />
