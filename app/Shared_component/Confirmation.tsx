@@ -6,7 +6,7 @@ import 'primereact/resources/themes/lara-light-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 
-export default function HeadlessDemo({ DeleteTrue, Name }: any) {
+export default function HeadlessDemo({ DeleteTrue, Name }: { DeleteTrue: () => void, Name: string }) {
     const toast = useRef<Toast | null>(null);
 
     const reject = () => {
@@ -45,9 +45,22 @@ export default function HeadlessDemo({ DeleteTrue, Name }: any) {
                             <div className="rounded-full bg-black text-white flex justify-center items-center h-30 w-30 mt-3">
                                 <i className="pi pi-question" style={{ fontSize: '50px' }}></i>
                             </div>
-                            <span className="font-bold text-xl mt-6 mb-2" ref={headerRef}>{header}</span>
-                            <p className="text-gray-700 text-center" ref={contentRef}>{msg}</p>
-                            <div className="flex gap-3 mt-6" ref={footerRef}>
+                            <span 
+                                className="font-bold text-xl mt-6 mb-2" 
+                                ref={headerRef as React.Ref<HTMLSpanElement>}
+                            >
+                                {header}
+                            </span>
+                            <p 
+                                className="text-gray-700 text-center" 
+                                ref={contentRef as React.Ref<HTMLParagraphElement>}
+                            >
+                                {msg}
+                            </p>
+                            <div 
+                                className="flex gap-3 mt-6" 
+                                ref={footerRef as React.Ref<HTMLDivElement>}
+                            >
                                 <Button 
                                     style={{ background: '#000', color: '#fff' }} 
                                     label="Cancel" 
