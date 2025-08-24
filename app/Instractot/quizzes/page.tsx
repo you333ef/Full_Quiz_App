@@ -513,6 +513,7 @@ const handleConfirm = useCallback(async (data: any) => {
                   isOpen={isConfirmationOpen}
                   onCancel={handleCancel}
                   onConfirm={handleConfirm}
+                  initialData={null}  
                 />
               </div>
             </div>
