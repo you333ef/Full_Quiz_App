@@ -139,16 +139,9 @@ const Charts = lazy(() =>
               paddingAngle={2}
               dataKey="value"
             >
-              {difficultyData.map((entry: any, index: number) => {
-                const raw = (entry?.color ?? "").toString().trim();
-                const isColor =
-                  typeof raw === "string" &&
-                  (raw.startsWith("#") || raw.startsWith("rgb") || /^[a-zA-Z]+$/.test(raw));
-                const fillColor = isColor
-                  ? raw
-                  : ["#10B981", "#F59E0B", "#EF4444", "#3B82F6", "#64748b"][index % 5];
-                return <Cell key={`cell-${index}`} fill={fillColor} />;
-              })}
+              {difficultyData.map((entry: any, index: number) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
             </Pie>
             <TooltipComp content={<CustomPieTooltip />} />
           </PieChart>
@@ -156,24 +149,15 @@ const Charts = lazy(() =>
       </div>
 
       <div className="flex justify-center gap-6 mt-4">
-        {difficultyData.map((item: any, index: number) => {
-          const raw = (item?.color ?? "").toString().trim();
-          const isColor =
-            typeof raw === "string" &&
-            (raw.startsWith("#") || raw.startsWith("rgb") || /^[a-zA-Z]+$/.test(raw));
-          const legendColor = isColor
-            ? raw
-            : ["#10B981", "#F59E0B", "#EF4444", "#3B82F6", "#64748b"][index % 5];
-          return (
-            <div key={index} className="flex items-center gap-2">
-              <div
-                className="w-[10px] h-[10px] rounded-full"
-                style={{ backgroundColor: legendColor }}
-              />
-              <span className="text-[13px] text-[#64748b] font-medium">{item.name}</span>
-            </div>
-          );
-        })}
+        {difficultyData.map((item: any, index: number) => (
+          <div key={index} className="flex items-center gap-2">
+            <div
+              className="w-[10px] h-[10px] rounded-full"
+              style={{ backgroundColor: item.color }}
+            />
+            <span className="text-[13px] text-[#64748b] font-medium">{item.name}</span>
+          </div>
+        ))}
       </div>
     </CardContent>
   </Card>
