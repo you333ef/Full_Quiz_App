@@ -118,7 +118,7 @@ const Charts = lazy(() =>
   <Card className="bg-[#ffffff] border-[#f1f5f9] w-full min-w-0">
     <CardHeader className="m-auto">
       <CardTitle className="text-[18px] font-semibold flex items-center gap-3 text-[#1e293b]">
-        <div className="w-1 h-5 bg-[#64748b] flex items-center justify-center rounded-sm" />
+        <div className="w-1 h-5 bg-[#000] flex items-center justify-center rounded-sm" />
         Question Difficulty Stats
       </CardTitle>
     </CardHeader>
