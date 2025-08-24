@@ -67,12 +67,12 @@ export default function LoginPage() {
 
   return (
     <div className="w-full text-white">
-      {/* header */}
+     
       <h2 className="text-xl font-semibold text-lime-300 whitespace-normal text-center lg:text-left">
         Continue your learning journey with <span className="text-white">QuizWiz!</span>
       </h2>
 
-      {/* Desktop tabs */}
+     
       <div className="hidden lg:block mt-4">
         <AuthTabs active="signin" />
       </div>

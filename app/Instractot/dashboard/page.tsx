@@ -114,79 +114,107 @@ const Charts = lazy(() =>
     return {
       default: function RechartsChunk({ difficultyData, Five }: any) {
         return (
-          <>
-            <Card className="bg-[#ffffff] border-[#f1f5f9] overflow-hidden">
-              <CardHeader className="p-[20px_20px_16px_20px]">
-                <CardTitle className="text-[18px] font-semibold flex items-center gap-3 text-[#1e293b]">
-                  <div className="w-1 h-5 bg-[#64748b] rounded-sm" />
-                  Question Difficulty Stats
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-[0_20px_20px_20px]">
-                <div className="w-full h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={difficultyData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={50}
-                        outerRadius={110}
-                        paddingAngle={2}
-                        dataKey="value"
-                      >
-                        {difficultyData.map((entry: any, index: number) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <TooltipComp content={<CustomPieTooltip />} />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-                <div className="flex justify-center gap-6 mt-4">
-                  {difficultyData.map((item: any, index: number) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <div className="w-[10px] h-[10px] rounded-full" style={{ backgroundColor: item.color }} />
-                      <span className="text-[13px] text-[#64748b] font-medium">{item.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+     <>
+  <Card className="bg-[#ffffff] border-[#f1f5f9] w-full min-w-0">
+    <CardHeader className="m-auto">
+      <CardTitle className="text-[18px] font-semibold flex items-center gap-3 text-[#1e293b]">
+        <div className="w-1 h-5 bg-[#64748b] flex items-center justify-center rounded-sm" />
+        Question Difficulty Stats
+      </CardTitle>
+    </CardHeader>
+    <CardContent className="p-[0_20px_20px_20px]">
+     
+      <div
+        className="flex flex-col items-center justify-center w-full min-w-0"
+        style={{ height: "300px" }}
+      >
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={difficultyData}
+              cx="50%"
+              cy="50%"
+              innerRadius={50}
+              outerRadius={110}
+              paddingAngle={2}
+              dataKey="value"
+            >
+              {difficultyData.map((entry: any, index: number) => {
+                const raw = (entry?.color ?? "").toString().trim();
+                const isColor =
+                  typeof raw === "string" &&
+                  (raw.startsWith("#") || raw.startsWith("rgb") || /^[a-zA-Z]+$/.test(raw));
+                const fillColor = isColor
+                  ? raw
+                  : ["#10B981", "#F59E0B", "#EF4444", "#3B82F6", "#64748b"][index % 5];
+                return <Cell key={`cell-${index}`} fill={fillColor} />;
+              })}
+            </Pie>
+            <TooltipComp content={<CustomPieTooltip />} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
 
-            <Card className="bg-[#ffffff] border-[#f1f5f9] overflow-hidden">
-              <CardHeader className="p-[20px_20px_16px_20px]">
-                <CardTitle className="text-[18px] font-semibold flex items-center gap-3 text-[#1e293b]">
-                  <div className="w-1 h-5 bg-[#1e293b] rounded-sm" />
-                  Top five students
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-[0_20px_20px_20px]">
-                <div className="w-full h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={Five.map((s: any) => ({
-                        name: `${s.first_name ?? ""}`.trim(),
-                        score: Number(s.avg_score ?? 0),
-                      }))}
-                      margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" opacity={0.8} />
-                      <XAxis dataKey="name" stroke="#64748b" fontSize={12} tick={{ fill: "#64748b" }} />
-                      <YAxis stroke="#64748b" fontSize={12} tick={{ fill: "#64748b" }} />
-                      <TooltipComp content={<CustomTooltip />} />
-                      <Bar dataKey="score" fill="#1e293b" radius={[6, 6, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-          </>
+      <div className="flex justify-center gap-6 mt-4">
+        {difficultyData.map((item: any, index: number) => {
+          const raw = (item?.color ?? "").toString().trim();
+          const isColor =
+            typeof raw === "string" &&
+            (raw.startsWith("#") || raw.startsWith("rgb") || /^[a-zA-Z]+$/.test(raw));
+          const legendColor = isColor
+            ? raw
+            : ["#10B981", "#F59E0B", "#EF4444", "#3B82F6", "#64748b"][index % 5];
+          return (
+            <div key={index} className="flex items-center gap-2">
+              <div
+                className="w-[10px] h-[10px] rounded-full"
+                style={{ backgroundColor: legendColor }}
+              />
+              <span className="text-[13px] text-[#64748b] font-medium">{item.name}</span>
+            </div>
+          );
+        })}
+      </div>
+    </CardContent>
+  </Card>
+
+  <Card className="bg-[#ffffff] border-[#f1f5f9] overflow-hidden min-w-0">
+    <CardHeader className="m-auto">
+      <CardTitle className="text-[18px] font-semibold flex items-center gap-3 text-[#1e293b]">
+        <div className="w-1 h-5 bg-[#1e293b] rounded-sm" />
+        Top five students
+      </CardTitle>
+    </CardHeader>
+    <CardContent className="p-[0_20px_20px_20px]">
+      <div className="w-full h-[300px] min-w-0">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={Five.map((s: any) => ({
+              name: `${s.first_name ?? ""}`.trim(),
+              score: Number(s.avg_score ?? 0),
+            }))}
+            margin={{ top: 20, right: 20, left: 20, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" opacity={0.8} />
+            <XAxis dataKey="name" stroke="#64748b" fontSize={12} tick={{ fill: "#64748b" }} />
+            <YAxis stroke="#64748b" fontSize={12} tick={{ fill: "#64748b" }} />
+            <TooltipComp content={<CustomTooltip />} />
+            <Bar dataKey="score" fill="#1e293b" radius={[6, 6, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </CardContent>
+  </Card>
+</>
+
         );
       },
     };
+    
   })
+  
 );
+
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -288,7 +316,7 @@ const Dashboard = () => {
 
   return (
     <main className="min-h-screen bg-[#ffffff] p-0">
-      <div className="max-w-[1280px] mx-auto p-6">
+      <div className="  w-full" >
         <header className="mb-10">
           <div className="flex items-center gap-4 mb-3">
             <div className="w-1 h-9 bg-[#1e293b] rounded-sm" />

@@ -1,8 +1,8 @@
 'use client';
 
+import Image from "next/image";
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
-
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-900 overflow-hidden">
@@ -11,8 +11,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 z-10">
         <div className="w-full max-w-md text-white">
           <div className="mb-6 text-center lg:text-left">
-            {/* centered on small screens, left-aligned on lg+ */}
-            <img src="/Logo.png" alt="Quizwiz Logo" className="h-10 mb-2 mx-auto lg:mx-0" />
+         
+          <Image
+  src="/logo.png"
+  alt="Quizwiz Logo"
+  width={120}
+  height={40}
+  className="h-10 mb-2 mx-auto lg:mx-0"
+  priority
+/>
+
           </div>
 
           {children}
