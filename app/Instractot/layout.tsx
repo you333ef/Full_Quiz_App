@@ -23,11 +23,10 @@ export interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { name: 'Dashboard', icon: <FaHome />, path: '/Instractot/dashboard' },
-    { name: 'Quizzes', icon: <FaChalkboardTeacher />, path: '/Instractot/quizzes' },
-
   { name: 'Quetchans', icon: <AddressBook />, path: '/Instractot/Quetchans' },
-  { name: 'Students', icon: <FaUsers />, path: '/Instractot/students' },
-  { name: 'Groups', icon: <MdGroups />, path: '/Instractot/groups' },
+      { name: 'Groups', icon: <MdGroups />, path: '/Instractot/groups' },
+       { name: 'Quizzes', icon: <FaChalkboardTeacher />, path: '/Instractot/quizzes' },
+      { name: 'Students', icon: <FaUsers />, path: '/Instractot/students' },
     { name: 'Results', icon: <FaChartBar />, path: '/Instractot/results' },
 
 ]
