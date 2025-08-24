@@ -18,8 +18,9 @@ export interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { name: 'Dashboard', icon: <FaHome />, path: '/learner/quizzes' },
+  
   { name: 'Quizzes', icon: <FaChalkboardTeacher />, path: '/learner/quizzes' },
+  { name: 'Dashboard', icon: <FaHome />, path: '/learner/quizzes' },
   { name: 'Results', icon: <FaChartBar />, path: '/learner/results' },
     { name: 'Help', icon: <GrContact />, path: '/learner/help' },
 ]
