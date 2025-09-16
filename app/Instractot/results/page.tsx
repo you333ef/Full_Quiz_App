@@ -10,7 +10,6 @@ const Taple_SHared = dynamic(() => import('../../Shared_component/Taple_SHared')
   loading: () => <div>Loading table...</div>,
 })
 
-// Define types for type safety
 interface QuizResult {
   quiz: {
     title: string
@@ -56,7 +55,6 @@ const Page = () => {
     GET_RESULTS()
   }, [])
 
-  // Memoize rows to prevent unnecessary recalculations
   const rows = useMemo(
     () =>
       save_results.map((item) => ({
@@ -73,7 +71,6 @@ const Page = () => {
     [save_results]
   )
 
-  // Skeleton loader component
   const SkeletonLoader = () => (
     <div className="animate-pulse">
       <div className="h-8 bg-gray-200 rounded mb-4"></div>
